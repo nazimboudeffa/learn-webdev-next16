@@ -11,7 +11,7 @@ const Navbar: React.FC = () => {
                         href='/'
                         className='text-xs sm:text-sm md:text-base truncate text-slate-200 hover:text-indigo-400 transition-colors font-semibold'
                     >
-                        ⚡ Learn HTML/CSS/JS
+                        ⚡ Learn HTML/CSS
                     </Link>
                 </div>
                 <div className='flex items-center justify-center flex-1'>
