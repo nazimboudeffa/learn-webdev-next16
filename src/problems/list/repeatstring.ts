@@ -6,21 +6,30 @@ const starterCodeRepeatString = `function repeatString(s, n){
 };`;
 
 const handlerRepeatString = (fn: any) => {
-  try {
-    const tests = [
-      { s: "a", n: 3, expected: "aaa" },
-      { s: "hi", n: 2, expected: "hihi" },
-      { s: "x", n: 0, expected: "" },
-    ];
-    for (const test of tests) {
+  const results: { type: 'hint' | 'error'; text: string }[] = [];
+  const tests = [
+    { s: "a", n: 3, expected: "aaa" },
+    { s: "hi", n: 2, expected: "hihi" },
+    { s: "x", n: 0, expected: "" },
+  ];
+  for (const test of tests) {
+    let passed = true;
+    try {
       const result = fn(test.s, test.n);
       assertDeepStrictEqual(result, test.expected);
+    } catch {
+      passed = false;
     }
-    return true;
-  } catch (error: any) {
-    console.log("repeatString handler function error");
-    throw new Error(error);
+    if (passed) {
+      results.push({ type: 'hint', text: `✅ Passed: repeatString('${test.s}', ${test.n}) === '${test.expected}'` });
+    } else {
+      results.push({ type: 'error', text: `❌ Failed: repeatString('${test.s}', ${test.n}) — expected '${test.expected}'` });
+    }
   }
+  if (results.every(r => r.type === 'hint')) {
+    results.push({ type: 'hint', text: 'All test cases passed! Great job.' });
+  }
+  return results;
 };
 
 export const repeatString: ProblemElement = {
