@@ -6,18 +6,27 @@ const starterCodeReverseString = `function reverseString(s){
 };`;
 
 const handlerReverseString = (fn: any) => {
-  try {
-    const inputs = ["hello", "", "abcde", "racecar"];
-    const outputs = ["olleh", "", "edcba", "racecar"];
-    for (let i = 0; i < inputs.length; i++) {
+  const results: { type: 'hint' | 'error'; text: string }[] = [];
+  const inputs = ["hello", "", "abcde", "racecar"];
+  const outputs = ["olleh", "", "edcba", "racecar"];
+  for (let i = 0; i < inputs.length; i++) {
+    let passed = true;
+    try {
       const result = fn(inputs[i]);
       assertDeepStrictEqual(result, outputs[i]);
+    } catch {
+      passed = false;
     }
-    return true;
-  } catch (error: any) {
-    console.log("reverseString handler function error");
-    throw new Error(error);
+    if (passed) {
+      results.push({ type: 'hint', text: `✅ Passed: reverseString('${inputs[i]}') === '${outputs[i]}'` });
+    } else {
+      results.push({ type: 'error', text: `❌ Failed: reverseString('${inputs[i]}') — expected '${outputs[i]}'` });
+    }
   }
+  if (results.every(r => r.type === 'hint')) {
+    results.push({ type: 'hint', text: 'All test cases passed! Great job.' });
+  }
+  return results;
 };
 
 export const reverseString: ProblemElement = {
