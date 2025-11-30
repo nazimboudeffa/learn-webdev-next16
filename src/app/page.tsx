@@ -65,75 +65,120 @@ const Home = () => {
             </div>
           </div>
 
-          {/* Learning Path Section */}
+            {/* Levels Overview Section */}
+            <div className="mt-20 sm:mt-28">
+              <div className="text-center mb-10">
+                <h2 className="text-2xl sm:text-3xl font-bold text-white bg-gradient-to-r from-green-400 via-yellow-400 to-pink-400 bg-clip-text text-transparent">
+                  Levels for Every Learner
+                </h2>
+                <p className="mt-4 text-slate-400 max-w-2xl mx-auto">
+                  Progress through three levels of challenges, each designed to help you grow from the basics to advanced mastery. Choose your starting point or work your way up!
+                </p>
+              </div>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-4xl mx-auto">
+                {/* Beginner */}
+                <div className="bg-gradient-to-br from-green-900/60 to-slate-900 rounded-xl p-6 border border-green-700 shadow-lg text-center">
+                  <div className="flex flex-col items-center mb-4">
+                    <div className="w-12 h-12 rounded-full bg-green-500/20 flex items-center justify-center text-2xl mb-2">🌱</div>
+                    <h3 className="text-xl font-bold text-green-300">Beginner</h3>
+                  </div>
+                  <p className="text-slate-300 text-sm mb-2">Start with the fundamentals: variables, functions, loops, and simple layouts. Perfect for those new to coding or web development.</p>
+                </div>
+                {/* Intermediate */}
+                <div className="bg-gradient-to-br from-yellow-900/60 to-slate-900 rounded-xl p-6 border border-yellow-700 shadow-lg text-center">
+                  <div className="flex flex-col items-center mb-4">
+                    <div className="w-12 h-12 rounded-full bg-yellow-500/20 flex items-center justify-center text-2xl mb-2">🚀</div>
+                    <h3 className="text-xl font-bold text-yellow-300">Intermediate</h3>
+                  </div>
+                  <p className="text-slate-300 text-sm mb-2">Build on your basics: arrays, strings, objects, and more complex layouts. Tackle real-world problems and interactive UIs.</p>
+                </div>
+                {/* Advanced */}
+                <div className="bg-gradient-to-br from-pink-900/60 to-slate-900 rounded-xl p-6 border border-pink-700 shadow-lg text-center">
+                  <div className="flex flex-col items-center mb-4">
+                    <div className="w-12 h-12 rounded-full bg-pink-500/20 flex items-center justify-center text-2xl mb-2">🏆</div>
+                    <h3 className="text-xl font-bold text-pink-300">Advanced</h3>
+                  </div>
+                  <p className="text-slate-300 text-sm mb-2">Take on the toughest challenges: algorithms, optimization, and interview prep. Push your skills to the next level and master web development.</p>
+                </div>
+              </div>
+            </div>
+
+            {/* Learning Path Section */}
+            <div className="mt-16">
+              <div className="text-center mb-10">
+                <h2 className="text-2xl sm:text-3xl font-bold text-white bg-gradient-to-r from-indigo-400 to-purple-400 bg-clip-text text-transparent">
+                  Choose Your Learning Path
+                </h2>
+                <p className="mt-4 text-slate-400 max-w-2xl mx-auto">Pick a path to start mastering web development. Each path is designed to help you build real skills through hands-on challenges.</p>
+              </div>
+              <div className="flex flex-wrap justify-center gap-4">
+              <div className="bg-slate-800/80 rounded-xl p-5 min-w-[260px] max-w-xs shadow-lg border border-yellow-700">
+                <h2 className="text-xl font-bold text-purple-300 mb-2">JavaScript Path</h2>
+                <p className="text-slate-400 text-sm mb-2">Solve logic, algorithms, and data structure problems using JavaScript.</p>
+                <a href="/problems?language=JavaScript" className="text-purple-300 hover:underline text-sm font-semibold">Explore JavaScript</a>
+              </div>
+              <div className="bg-slate-800/80 rounded-xl p-5 min-w-[260px] max-w-xs shadow-lg border border-indigo-700">
+                <h2 className="text-xl font-bold text-indigo-300 mb-2">HTML/CSS Path</h2>
+                <p className="text-slate-400 text-sm mb-2">Build and style web pages from scratch. Practice layout, flexbox, ...</p>
+                <a href="/problems?language=HTML/CSS" className="text-indigo-400 hover:underline text-sm font-semibold">Explore HTML/CSS</a>
+              </div>
+              <div className="bg-slate-800/80 rounded-xl p-5 min-w-[260px] max-w-xs shadow-lg border border-pink-700">
+                <h2 className="text-xl font-bold text-pink-300 mb-2">React Path</h2>
+                <p className="text-slate-400 text-sm mb-2">Practice building interactive UIs and components with React.</p>
+                <a href="/problems?language=React" className="text-pink-400 hover:underline text-sm font-semibold">Explore React</a>
+              </div>
+            </div>
+          </div>
+
+                  {/* JavaScript Path Section */}
           <div className="mt-16 sm:mt-24">
             <div className="text-center mb-12">
               <h2 className="text-2xl sm:text-3xl font-bold text-white bg-gradient-to-r from-indigo-400 to-purple-400 bg-clip-text text-transparent">
-                Your JavaScript Path
+                JavaScript Path
               </h2>
-              <p className="mt-4 text-slate-400">Master JavaScript step by step</p>
+              <p className="mt-4 text-slate-400 max-w-2xl mx-auto">
+                Build strong JavaScript fundamentals with hands-on challenges
+              </p>
             </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              {/* Beginner */}
-              <div className="group bg-gradient-to-br from-slate-800 to-slate-900 rounded-xl p-6 border border-slate-700 shadow-lg cursor-default">
-                <div className="flex items-center gap-3 mb-4">
-                  <div className="w-12 h-12 rounded-lg bg-green-500/20 flex items-center justify-center text-2xl">
-                    🌱
-                  </div>
-                  <div>
-                    <h3 className="text-xl font-bold text-white">Beginner</h3>
-                    <p className="text-sm text-green-400">Start here</p>
-                  </div>
-                </div>
-                <p className="text-slate-300 text-sm mb-4">Learn the fundamentals: variables, functions, loops, and basic problem solving.</p>
-                <div className="flex flex-wrap gap-2">
-                  <span className="px-2 py-1 bg-slate-700 rounded text-xs text-slate-300">Variables</span>
-                  <span className="px-2 py-1 bg-slate-700 rounded text-xs text-slate-300">Functions</span>
-                  <span className="px-2 py-1 bg-slate-700 rounded text-xs text-slate-300">Loops</span>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-10">
+              {/* Core Concepts Card */}
+              <div className="bg-gradient-to-br from-slate-800 to-slate-900 rounded-xl p-6 shadow-lg ring-2 ring-slate-700">
+                <h3 className="text-lg font-bold text-white mb-2 text-center">Core Concepts</h3>
+                <p className="text-slate-300 text-sm mb-3 text-center">
+                  Master variables, data types, functions, loops, and control flow—the building blocks of JavaScript.
+                </p>
+                <div className="flex flex-wrap gap-2 justify-center mb-2">
+                  <span className="px-2 py-1 bg-slate-700 rounded text-xs text-slate-300">variables</span>
+                  <span className="px-2 py-1 bg-slate-700 rounded text-xs text-slate-300">functions</span>
+                  <span className="px-2 py-1 bg-slate-700 rounded text-xs text-slate-300">loops</span>
                 </div>
               </div>
-
-              {/* Intermediate */}
-              <div className="group bg-gradient-to-br from-slate-800 to-slate-900 rounded-xl p-6 border border-slate-700 shadow-lg cursor-default">
-                <div className="flex items-center gap-3 mb-4">
-                  <div className="w-12 h-12 rounded-lg bg-yellow-500/20 flex items-center justify-center text-2xl">
-                    🚀
-                  </div>
-                  <div>
-                    <h3 className="text-xl font-bold text-white">Intermediate</h3>
-                    <p className="text-sm text-yellow-400">Level up</p>
-                  </div>
-                </div>
-                <p className="text-slate-300 text-sm mb-4">Master arrays, strings, objects, and common algorithms like sorting and searching.</p>
-                <div className="flex flex-wrap gap-2">
-                  <span className="px-2 py-1 bg-slate-700 rounded text-xs text-slate-300">Arrays</span>
-                  <span className="px-2 py-1 bg-slate-700 rounded text-xs text-slate-300">Strings</span>
-                  <span className="px-2 py-1 bg-slate-700 rounded text-xs text-slate-300">Objects</span>
+              {/* Algorithms & Problem Solving Card */}
+              <div className="bg-gradient-to-br from-slate-800 to-slate-900 rounded-xl p-6 shadow-lg ring-2 ring-slate-700">
+                <h3 className="text-lg font-bold text-white mb-2 text-center">Algorithms & Problem Solving</h3>
+                <p className="text-slate-300 text-sm mb-3 text-center">
+                  Sharpen your skills with array, string, object manipulation, and classic algorithms.
+                </p>
+                <div className="flex flex-wrap gap-2 justify-center mb-2">
+                  <span className="px-2 py-1 bg-slate-700 rounded text-xs text-slate-300">arrays</span>
+                  <span className="px-2 py-1 bg-slate-700 rounded text-xs text-slate-300">strings</span>
+                  <span className="px-2 py-1 bg-slate-700 rounded text-xs text-slate-300">recursion</span>
                 </div>
               </div>
-
-              {/* Advanced */}
-              <div className="group bg-gradient-to-br from-slate-800 to-slate-900 rounded-xl p-6 border border-slate-700 shadow-lg cursor-default">
-                <div className="flex items-center gap-3 mb-4">
-                  <div className="w-12 h-12 rounded-lg bg-red-500/20 flex items-center justify-center text-2xl">
-                    🏆
-                  </div>
-                  <div>
-                    <h3 className="text-xl font-bold text-white">Advanced</h3>
-                    <p className="text-sm text-red-400">Expert level</p>
-                  </div>
-                </div>
-                <p className="text-slate-300 text-sm mb-4">Tackle complex challenges, optimize solutions, and prepare for technical interviews.</p>
-                <div className="flex flex-wrap gap-2">
-                  <span className="px-2 py-1 bg-slate-700 rounded text-xs text-slate-300">Algorithms</span>
-                  <span className="px-2 py-1 bg-slate-700 rounded text-xs text-slate-300">Optimization</span>
-                  <span className="px-2 py-1 bg-slate-700 rounded text-xs text-slate-300">Interview Prep</span>
+              {/* Real-World Skills Card */}
+              <div className="bg-gradient-to-br from-slate-800 to-slate-900 rounded-xl p-6 shadow-lg ring-2 ring-slate-700">
+                <h3 className="text-lg font-bold text-white mb-2 text-center">Real-World Skills</h3>
+                <p className="text-slate-300 text-sm mb-3 text-center">
+                  Apply JavaScript to solve practical problems, debug code, and prepare for interviews.
+                </p>
+                <div className="flex flex-wrap gap-2 justify-center mb-2">
+                  <span className="px-2 py-1 bg-slate-700 rounded text-xs text-slate-300">debugging</span>
+                  <span className="px-2 py-1 bg-slate-700 rounded text-xs text-slate-300">interview prep</span>
+                  <span className="px-2 py-1 bg-slate-700 rounded text-xs text-slate-300">real projects</span>
                 </div>
               </div>
             </div>
-
-            <div className="mt-10 flex items-center justify-center">
+            <div className="mt-4 flex items-center justify-center">
               <a href="/problems?language=JavaScript" className="text-center rounded-lg bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 px-6 py-3 text-sm font-bold text-white shadow-xl hover:shadow-indigo-500/50 transition-all hover:scale-105 active:scale-95">
                 Explore All JavaScript Challenges →
               </a>

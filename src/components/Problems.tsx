@@ -215,15 +215,27 @@ const Problems: React.FC<ProblemsProps> = ({ difficulty, language }) => {
                   <td className={`px-3 sm:px-6 py-4 ${difficultyColor} font-semibold`}>{problem.difficulty}</td>
                   <td className={'px-3 sm:px-6 py-4 hidden sm:table-cell text-slate-400'}>{problem.category}</td>
                   <td className={'px-3 sm:px-6 py-4 hidden md:table-cell text-slate-400'}>
-                    {problem.language ? (
-                      <span className='text-xs bg-indigo-600/20 text-indigo-300 px-2 py-1 rounded-md font-medium'>
-                        {problem.language}
-                      </span>
-                    ) : (
-                      <span className='text-xs bg-purple-600/20 text-purple-300 px-2 py-1 rounded-md font-medium'>
-                        JavaScript
-                      </span>
-                    )}
+                    {(() => {
+                      if (problem.language === 'React') {
+                        return (
+                          <span className='text-xs bg-pink-600/20 text-pink-300 px-2 py-1 rounded-md font-medium'>
+                            React
+                          </span>
+                        );
+                      } else if (problem.language) {
+                        return (
+                          <span className='text-xs bg-indigo-600/20 text-indigo-300 px-2 py-1 rounded-md font-medium'>
+                            {problem.language}
+                          </span>
+                        );
+                      } else {
+                        return (
+                          <span className='text-xs bg-purple-600/20 text-purple-300 px-2 py-1 rounded-md font-medium'>
+                            JavaScript
+                          </span>
+                        );
+                      }
+                    })()}
                   </td>
                   <td className={'px-3 sm:px-6 py-4'}>
                     <Link className='hover:text-purple-400 cursor-pointer text-xs sm:text-sm text-slate-300 transition-colors font-medium' href={`/problems/${problem.slug}/explanation`}>
