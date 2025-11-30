@@ -5,6 +5,7 @@ import Workspace from "@/components/Workspace/Workspace";
 import useHasMounted from "@/hooks/useHasMounted";
 import { ProblemElement } from "@/problems/types/problem";
 import { problems } from "@/problems/list";
+import Navbar from "@/components/Navbar";
 
 const ProblemPage: React.FC = (context : any) => {
 	const hasMounted = useHasMounted();
@@ -16,7 +17,10 @@ const ProblemPage: React.FC = (context : any) => {
 	}
 	const problem = getData(params.slug)
 	return (
-		<Workspace problem={problem} />
+		<>		
+			<Navbar />
+			<Workspace problem={problem} />
+		</>
 	);
 
 };

@@ -269,16 +269,26 @@ const HTMLCSSPlayground: React.FC<HTMLCSSPlaygroundProps> = ({ problem, setSucce
 				</div>
 
 				<div className='w-full overflow-auto bg-[#0d1117]'>
-					{/* tab header */}
-					<div className='flex h-12 items-center space-x-2 sm:space-x-4 border-b-2 border-slate-700 px-4 sm:px-6'>
+					{/* tab header - modern underline/tab-bar style */}
+					<div className='flex h-12 items-end border-b-2 border-slate-700 px-4 sm:px-6 bg-[#0d1117]'>
 						<button
-							className={`text-xs sm:text-sm font-bold px-3 sm:px-4 py-2 rounded-lg transition-all ${activePanel === 'preview' ? 'bg-gradient-to-r from-indigo-600 to-purple-600 text-white shadow-lg' : 'bg-slate-800 text-slate-300 border-2 border-slate-600 hover:border-indigo-400'}`}
+							className={`relative text-xs sm:text-sm font-bold px-4 py-2 focus:outline-none transition-colors
+							  ${activePanel === 'preview'
+							    ? 'text-indigo-400 border-b-4 border-indigo-500'
+							    : 'text-slate-400 hover:text-indigo-300 border-b-4 border-transparent'}
+							`}
+							style={{ background: 'none', borderRadius: 0 }}
 							onClick={() => setActivePanel('preview')}
 						>
 							👁️ Preview
 						</button>
 						<button
-							className={`text-xs sm:text-sm font-bold px-3 sm:px-4 py-2 rounded-lg transition-all ${activePanel === 'console' ? 'bg-gradient-to-r from-indigo-600 to-purple-600 text-white shadow-lg' : 'bg-slate-800 text-slate-300 border-2 border-slate-600 hover:border-indigo-400'}`}
+							className={`relative text-xs sm:text-sm font-bold px-4 py-2 focus:outline-none transition-colors
+							  ${activePanel === 'console'
+							    ? 'text-indigo-400 border-b-4 border-indigo-500'
+							    : 'text-slate-400 hover:text-indigo-300 border-b-4 border-transparent'}
+							`}
+							style={{ background: 'none', borderRadius: 0 }}
 							onClick={() => setActivePanel('console')}
 						>
 							🖥️ Console
@@ -286,7 +296,7 @@ const HTMLCSSPlayground: React.FC<HTMLCSSPlaygroundProps> = ({ problem, setSucce
 					</div>
 
 					{activePanel === 'preview' ? (
-						<div className='py-4 h-[calc(100%-3rem)]'>
+						<div className='px-4 py-4 pb-20 h-[calc(100%-3rem)]'>
 							<HTMLPreview html={userHTML} css={userCSS} />
 						</div>
 					) : (
