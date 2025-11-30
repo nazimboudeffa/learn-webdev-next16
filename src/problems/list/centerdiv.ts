@@ -21,49 +21,84 @@ const starterCodeCSSCenterDiv = `.container {
   color: white;
 }`;
 
+function checkElementExists(doc: Document, selector: string, messages: { type: "hint" | "error"; text: string }[]): boolean {
+  try {
+    assertElementExists(doc, selector);
+    messages.push({ type: "hint", text: `Found ${selector} element.` });
+    return true;
+  } catch (e: any) {
+    messages.push({ type: "error", text: e.message });
+    return false;
+  }
+}
+
+function checkContainerCSSRules(containerRules: string, messages: { type: "hint" | "error"; text: string }[]): boolean {
+  let hasError = false;
+  if (!containerRules.includes('display') || !containerRules.includes('flex')) {
+    messages.push({ type: "error", text: 'Container should use display: flex' });
+    hasError = true;
+  } else {
+    messages.push({ type: "hint", text: 'Container uses display: flex.' });
+  }
+  if (!containerRules.includes('justify-content') || !containerRules.includes('center')) {
+    messages.push({ type: "error", text: 'Container should use justify-content: center' });
+    hasError = true;
+  } else {
+    messages.push({ type: "hint", text: 'Container uses justify-content: center.' });
+  }
+  if (!containerRules.includes('align-items') || !containerRules.includes('center')) {
+    messages.push({ type: "error", text: 'Container should use align-items: center' });
+    hasError = true;
+  } else {
+    messages.push({ type: "hint", text: 'Container uses align-items: center.' });
+  }
+  if (containerRules.includes('min-height')) {
+    messages.push({ type: "hint", text: 'Container has min-height.' });
+  } else {
+    messages.push({ type: "error", text: 'Container should have a min-height (e.g., 100vh)' });
+    hasError = true;
+  }
+  return hasError;
+}
+
 const handlerCenterDiv = ({ html, css }: { html: string; css: string }) => {
+  const messages: { type: "hint" | "error"; text: string }[] = [];
+  let hasError = false;
   try {
     const doc = createTestDOM(html, css);
-    
+
     // Check if container exists
-    assertElementExists(doc, ".container");
-    
+    if (!checkElementExists(doc, ".container", messages)) {
+      hasError = true;
+    }
+
     // Check if box exists
-    assertElementExists(doc, ".box");
-    
+    if (!checkElementExists(doc, ".box", messages)) {
+      hasError = true;
+    }
+
     // Check CSS rules directly instead of computed styles
     const cssLower = css.toLowerCase().replaceAll(/\s+/g, ' ');
-    
     // Check for .container rules
     const containerRegex = /\.container\s*\{([^}]+)\}/;
     const containerMatch = containerRegex.exec(cssLower);
-    if (!containerMatch) {
-      throw new Error('Container CSS rules not found');
+    if (containerMatch) {
+      const containerRules = containerMatch[1];
+      if (checkContainerCSSRules(containerRules, messages)) {
+        hasError = true;
+      }
+    } else {
+      messages.push({ type: "error", text: 'Container CSS rules not found' });
+      hasError = true;
     }
-    
-    const containerRules = containerMatch[1];
-    
-    if (!containerRules.includes('display') || !containerRules.includes('flex')) {
-      throw new Error('Container should use display: flex');
-    }
-    
-    if (!containerRules.includes('justify-content') || !containerRules.includes('center')) {
-      throw new Error('Container should use justify-content: center');
-    }
-    
-    if (!containerRules.includes('align-items') || !containerRules.includes('center')) {
-      throw new Error('Container should use align-items: center');
-    }
-    
-    if (!containerRules.includes('min-height')) {
-      throw new Error('Container should have a min-height (e.g., 100vh)');
-    }
-    
-    return true;
   } catch (error: any) {
-    console.log("centerDiv handler function error");
-    throw new Error(error);
+    messages.push({ type: "error", text: error.message });
+    hasError = true;
   }
+  if (!hasError) {
+    messages.push({ type: "hint", text: 'Congrats! All tests passed' });
+  }
+  return messages;
 };
 
 export const centerDiv: ProblemElement = {

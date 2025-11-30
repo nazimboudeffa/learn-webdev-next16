@@ -39,7 +39,7 @@ export type ProblemElement = {
 		code?: string;
 	};
 	starterCode: string;
-	handlerFunction: ((fn: any) => boolean) | string;
+	handlerFunction: ((args: any) => { type: "hint" | "error"; text: string }[]) | string;
 	starterFunctionName: string;
 	type?: "javascript" | "html-css" | "react"; // Type of problem
 	starterCodeHTML?: string; // For HTML/CSS problems

@@ -1,14 +1,28 @@
-import { BsChevronUp } from "react-icons/bs"
+type RunMessage = {
+    type: "hint" | "error";
+    text: string;
+};
 
-const Console = () => {
+type ConsoleProps = {
+    messages: RunMessage[];
+};
+
+const Console: React.FC<ConsoleProps> = ({ messages }) => {
     return (
-        <div className='mr-2 flex flex-1 flex-nowrap items-center space-x-4'>
-            <button className='px-3 py-1.5 font-medium items-center transition-all inline-flex bg-zinc-400 text-sm rounded-lg pl-3 pr-2'>
-                Console
-                <div className='ml-1 transform transition flex items-center'>
-                    <BsChevronUp className='fill-gray-6 mx-1 fill-dark-gray-6' />
-                </div>
-            </button>
+        <div className='w-full px-4 sm:px-6 pb-20 overflow-auto bg-[#0d1117]'>
+            <div className='mt-4'>
+                {messages.length === 0 ? (
+                    <div className='text-xs sm:text-sm text-slate-400'>No messages yet. Click Run to populate.</div>
+                ) : (
+                    <ul className='space-y-2'>
+                        {messages.map((m, idx) => (
+                            <li key={`${m.type}-${m.text}-${idx}`} className={`rounded-lg border-2 px-3 sm:px-4 py-3 bg-slate-900 border-slate-700 text-xs sm:text-sm font-mono ${m.type === 'error' ? 'text-rose-400' : 'text-emerald-300'}`}>
+                                {m.type === 'error' ? '❌ Error: ' : '💡 Hint: '} {m.text}
+                            </li>
+                        ))}
+                    </ul>
+                )}
+            </div>
         </div>
     )
 }

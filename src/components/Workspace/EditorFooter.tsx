@@ -1,14 +1,19 @@
+type RunMessage = {
+	type: "hint" | "error";
+	text: string;
+};
+
 type EditorFooterProps = {
 	handleRun: () => void;
 	handleSubmit: () => void;
 	handleReset: () => void;
+	messages?: RunMessage[];
 };
 
-const EditorFooter: React.FC<EditorFooterProps> = ({ handleRun, handleSubmit, handleReset }) => {
+const EditorFooter: React.FC<EditorFooterProps> = ({ handleRun, handleSubmit, handleReset, messages = [] }) => {
 	return (
 		<div className='flex bg-gradient-to-r from-slate-800 to-slate-900 absolute bottom-0 z-10 w-full border-t-2 border-slate-700 shadow-lg'>
 			<div className='mx-3 sm:mx-6 my-3 flex justify-between w-full'>
-				{/* here goes the console */}
 				<div className='ml-auto flex items-center space-x-3 sm:space-x-4'>
 					<button
 						className='px-3 sm:px-4 py-2 text-xs sm:text-sm font-bold items-center whitespace-nowrap transition-all focus:outline-none inline-flex rounded-lg bg-slate-700 hover:bg-slate-600 text-white shadow-lg hover:shadow-slate-500/50 hover:scale-105 active:scale-95'

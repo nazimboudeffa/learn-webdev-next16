@@ -6,6 +6,7 @@ import { githubDark } from "@uiw/codemirror-theme-github";
 import { javascript } from "@codemirror/lang-javascript";
 import { ProblemElement } from "@/problems/types/problem";
 import EditorFooter from "./EditorFooter";
+import Console from "./Console";
 import { problems } from "@/problems/list";
 import { toast } from "react-toastify";
 import ToastProvider from "./ToastProvider";
@@ -30,6 +31,8 @@ const Playground: React.FC<PlaygroundProps> = ({ problem, setSuccess, setSolved 
 		settingsModalIsOpen: false,
 		dropdownIsOpen: false,
 	});
+	const [runMessages, setRunMessages] = useState<{ type: "hint" | "error"; text: string }[]>([]);
+	const [activePanel, setActivePanel] = useState<"tests" | "console">("tests");
 
 	const handleSubmit = async () => {
 		try {
@@ -83,6 +86,7 @@ const Playground: React.FC<PlaygroundProps> = ({ problem, setSuccess, setSolved 
 			if (typeof handler === "function") {
 				const success = handler(cb);
 				if (success) {
+					setRunMessages([{ type: "hint", text: "It works! Try to submit." }]);
 					toast.success("It works! Try to submit", {
 						position: "top-center",
 						autoClose: 3000,
@@ -94,12 +98,14 @@ const Playground: React.FC<PlaygroundProps> = ({ problem, setSuccess, setSolved 
 			if (
 				error.message.startsWith("AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:")
 			) {
+				setRunMessages([{ type: "error", text: "One or more test cases failed." }]);
 				toast.error("Oops! One or more test cases failed", {
 					position: "top-center",
 					autoClose: 3000,
 					theme: "dark",
 				});
 			} else {
+				setRunMessages([{ type: "error", text: error.message }]);
 				toast.error(error.message, {
 					position: "top-center",
 					autoClose: 3000,
@@ -114,6 +120,7 @@ const Playground: React.FC<PlaygroundProps> = ({ problem, setSuccess, setSolved 
 		localStorage.removeItem(`code-${problem.id}`);
 		localStorage.removeItem(`solved-${problem.slug}`);
 		setSolved(false);
+		setRunMessages([]);
 		toast.info('Code reset to starter', {
 			position: "top-center",
 			autoClose: 2000,
@@ -145,63 +152,75 @@ const Playground: React.FC<PlaygroundProps> = ({ problem, setSuccess, setSolved 
 						style={{ fontSize: settings.fontSize }}
 					/>
 				</div>
-				<div className='w-full px-4 sm:px-6 pb-20 overflow-auto bg-[#0d1117]'>
-					{/* testcase heading */}
-					<div className='flex h-12 items-center space-x-4 sm:space-x-6 border-b-2 border-slate-700'>
-						<div className='relative flex h-full flex-col justify-center cursor-pointer group'>
-							<div className='text-sm sm:text-base font-bold leading-5 text-slate-200 group-hover:text-indigo-400 transition-colors'>
-								📋 Test Cases
-							</div>
-							<hr className='absolute bottom-0 h-1 w-full rounded-full border-none bg-gradient-to-r from-indigo-600 to-purple-600' />
-						</div>
+				<div className='w-full overflow-auto bg-[#0d1117]'>
+					{/* tab header */}
+					<div className='flex h-12 items-center space-x-2 sm:space-x-4 border-b-2 border-slate-700 px-4 sm:px-6'>
+						<button
+							className={`text-xs sm:text-sm font-bold px-3 sm:px-4 py-2 rounded-lg transition-all ${activePanel === 'tests' ? 'bg-gradient-to-r from-indigo-600 to-purple-600 text-white shadow-lg' : 'bg-slate-800 text-slate-300 border-2 border-slate-600 hover:border-indigo-400'}`}
+							onClick={() => setActivePanel('tests')}
+						>
+							📋 Test Cases
+						</button>
+						<button
+							className={`text-xs sm:text-sm font-bold px-3 sm:px-4 py-2 rounded-lg transition-all ${activePanel === 'console' ? 'bg-gradient-to-r from-indigo-600 to-purple-600 text-white shadow-lg' : 'bg-slate-800 text-slate-300 border-2 border-slate-600 hover:border-indigo-400'}`}
+							onClick={() => setActivePanel('console')}
+						>
+							🖥️ Console
+						</button>
 					</div>
 
-					<div className='flex flex-wrap gap-2 py-4'>
-						{problem.examples.map((example, index) => (
-							<button
-								type='button'
-								className='items-start'
-								key={example.id}
-								onClick={() => setActiveTestCaseId(index)}
-								aria-pressed={activeTestCaseId === index}
-							>
-								<div className='flex flex-wrap items-center gap-y-4'>
-									<div
-										className={`text-xs sm:text-sm font-semibold items-center transition-all focus:outline-none inline-flex relative rounded-lg px-4 sm:px-5 py-2 cursor-pointer whitespace-nowrap shadow-sm border-2
-										${activeTestCaseId === index 
-											? "bg-gradient-to-r from-indigo-600 to-purple-600 text-white border-indigo-600 shadow-lg shadow-indigo-500/50 scale-105" 
-											: "bg-slate-800 text-slate-300 border-slate-600 hover:border-indigo-400 hover:shadow-md"}
-									`}
+					{activePanel === 'tests' ? (
+						<div className='w-full px-4 sm:px-6 pb-20'>
+							<div className='flex flex-wrap gap-2 py-4'>
+								{problem.examples.map((example, index) => (
+									<button
+										type='button'
+										className='items-start'
+										key={example.id}
+										onClick={() => setActiveTestCaseId(index)}
+										aria-pressed={activeTestCaseId === index}
 									>
-										Case {index + 1}
+										<div className='flex flex-wrap items-center gap-y-4'>
+											<div
+												className={`text-xs sm:text-sm font-semibold items-center transition-all focus:outline-none inline-flex relative rounded-lg px-4 sm:px-5 py-2 cursor-pointer whitespace-nowrap shadow-sm border-2
+												${activeTestCaseId === index 
+													? 'bg-gradient-to-r from-indigo-600 to-purple-600 text-white border-indigo-600 shadow-lg shadow-indigo-500/50 scale-105' 
+													: 'bg-slate-800 text-slate-300 border-slate-600 hover:border-indigo-400 hover:shadow-md'}
+											`}
+											>
+												Case {index + 1}
+											</div>
+										</div>
+									</button>
+								))}
+							</div>
+
+							<div className='font-semibold my-4 space-y-4 pb-4'>
+								<div>
+									<p className='text-xs sm:text-sm font-bold mb-2 text-slate-300 flex items-center gap-2'>
+										<span className='text-lg'>📥</span> Input:
+									</p>
+									<div className='w-full cursor-text rounded-lg border-2 px-3 sm:px-4 py-3 bg-slate-900 border-slate-700 hover:border-indigo-500 transition-colors text-xs sm:text-sm overflow-x-auto font-mono shadow-sm text-emerald-400'>
+										{problem.examples[activeTestCaseId].inputText}
 									</div>
 								</div>
-							</button>
-						))}
-					</div>
-
-					<div className='font-semibold my-4 space-y-4 pb-4'>
-						<div>
-							<p className='text-xs sm:text-sm font-bold mb-2 text-slate-300 flex items-center gap-2'>
-								<span className='text-lg'>📥</span> Input:
-							</p>
-							<div className='w-full cursor-text rounded-lg border-2 px-3 sm:px-4 py-3 bg-slate-900 border-slate-700 hover:border-indigo-500 transition-colors text-xs sm:text-sm overflow-x-auto font-mono shadow-sm text-emerald-400'>
-								{problem.examples[activeTestCaseId].inputText}
+								<div>
+									<p className='text-xs sm:text-sm font-bold mb-2 text-slate-300 flex items-center gap-2'>
+										<span className='text-lg'>📤</span> Output:
+									</p>
+									<div className='w-full cursor-text rounded-lg border-2 px-3 sm:px-4 py-3 bg-slate-900 border-slate-700 hover:border-indigo-500 transition-colors text-xs sm:text-sm overflow-x-auto font-mono shadow-sm text-cyan-400'>
+										{problem.examples[activeTestCaseId].outputText}
+									</div>
+								</div>
 							</div>
 						</div>
-						<div>
-							<p className='text-xs sm:text-sm font-bold mb-2 text-slate-300 flex items-center gap-2'>
-								<span className='text-lg'>📤</span> Output:
-							</p>
-							<div className='w-full cursor-text rounded-lg border-2 px-3 sm:px-4 py-3 bg-slate-900 border-slate-700 hover:border-indigo-500 transition-colors text-xs sm:text-sm overflow-x-auto font-mono shadow-sm text-cyan-400'>
-								{problem.examples[activeTestCaseId].outputText}
-							</div>
-						</div>
-					</div>
-			</div>
+					) : (
+						<Console messages={runMessages} />
+					)}
+				</div>
 		</Split>
 		<ToastProvider />
-		<EditorFooter handleRun={handleRun} handleSubmit={handleSubmit} handleReset={handleReset} />
+		<EditorFooter handleRun={handleRun} handleSubmit={handleSubmit} handleReset={handleReset} messages={runMessages} />
 	</div>
 	);
 };
