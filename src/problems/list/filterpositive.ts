@@ -6,21 +6,25 @@ const starterCodeFilterPositive = `function filterPositive(arr){
 };`;
 
 const handlerFilterPositive = (fn: any) => {
-  try {
-    const tests = [
-      { arr: [1, -2, 3, -4, 5], expected: [1, 3, 5] },
-      { arr: [-1, -2, -3], expected: [] },
-      { arr: [10, 20], expected: [10, 20] },
-    ];
-    for (const test of tests) {
+  const results: { type: 'hint' | 'error'; text: string }[] = [];
+  const tests = [
+    { arr: [1, -2, 3, -4, 5], expected: [1, 3, 5] },
+    { arr: [-1, -2, -3], expected: [] },
+    { arr: [10, 20], expected: [10, 20] },
+  ];
+  for (const test of tests) {
+    try {
       const result = fn(test.arr);
       assertDeepStrictEqual(result, test.expected);
+      results.push({ type: 'hint', text: `✅ Passed: filterPositive([${test.arr}]) === [${test.expected}]` });
+    } catch (error: any) {
+      results.push({ type: 'error', text: `❌ Failed: filterPositive([${test.arr}]) — expected [${test.expected}], got ${error?.actual ?? 'error'}` });
     }
-    return true;
-  } catch (error: any) {
-    console.log("filterPositive handler function error");
-    throw new Error(error);
   }
+  if (results.every(r => r.type === 'hint')) {
+    results.push({ type: 'hint', text: 'All test cases passed! Great job.' });
+  }
+  return results;
 };
 
 export const filterPositive: ProblemElement = {
