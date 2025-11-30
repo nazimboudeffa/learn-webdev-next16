@@ -6,26 +6,35 @@ const starterCodeTwoSum = `function twoSum(nums, target){
 };`;
 
 const handlerTwoSum = (fn: any) => {
-  try {
-    const inputs = [
-      { nums: [2,7,11,15], target: 9 },
-      { nums: [3,2,4], target: 6 },
-      { nums: [3,3], target: 6 },
-    ];
-    const outputs = [
-      [0,1],
-      [1,2],
-      [0,1],
-    ];
-    for (let i = 0; i < inputs.length; i++) {
+  const results: { type: 'hint' | 'error'; text: string }[] = [];
+  const inputs = [
+    { nums: [2,7,11,15], target: 9 },
+    { nums: [3,2,4], target: 6 },
+    { nums: [3,3], target: 6 },
+  ];
+  const outputs = [
+    [0,1],
+    [1,2],
+    [0,1],
+  ];
+  for (let i = 0; i < inputs.length; i++) {
+    let passed = true;
+    try {
       const result = fn(inputs[i].nums, inputs[i].target);
       assertDeepStrictEqual(result, outputs[i]);
+    } catch {
+      passed = false;
     }
-    return true;
-  } catch (error: any) {
-    console.log("twoSum handler function error");
-    throw new Error(error);
+    if (passed) {
+      results.push({ type: 'hint', text: `✅ Passed: twoSum([${inputs[i].nums}], ${inputs[i].target}) === [${outputs[i]}]` });
+    } else {
+      results.push({ type: 'error', text: `❌ Failed: twoSum([${inputs[i].nums}], ${inputs[i].target}) — expected [${outputs[i]}]` });
+    }
   }
+  if (results.every(r => r.type === 'hint')) {
+    results.push({ type: 'hint', text: 'All test cases passed! Great job.' });
+  }
+  return results;
 };
 
 export const twoSum: ProblemElement = {
