@@ -6,21 +6,30 @@ const starterCodeMaxNumber = `function maxNumber(arr){
 };`;
 
 const handlerMaxNumber = (fn: any) => {
-  try {
-    const tests = [
-      { arr: [1, 5, 3, 9, 2], expected: 9 },
-      { arr: [10], expected: 10 },
-      { arr: [-5, -1, -10], expected: -1 },
-    ];
-    for (const test of tests) {
+  const results: { type: 'hint' | 'error'; text: string }[] = [];
+  const tests = [
+    { arr: [1, 5, 3, 9, 2], expected: 9 },
+    { arr: [10], expected: 10 },
+    { arr: [-5, -1, -10], expected: -1 },
+  ];
+  for (const test of tests) {
+    let passed = true;
+    try {
       const result = fn(test.arr);
       assertDeepStrictEqual(result, test.expected);
+    } catch {
+      passed = false;
     }
-    return true;
-  } catch (error: any) {
-    console.log("maxNumber handler function error");
-    throw new Error(error);
+    if (passed) {
+      results.push({ type: 'hint', text: `✅ Passed: maxNumber([${test.arr}]) === ${test.expected}` });
+    } else {
+      results.push({ type: 'error', text: `❌ Failed: maxNumber([${test.arr}]) — expected ${test.expected}` });
+    }
   }
+  if (results.every(r => r.type === 'hint')) {
+    results.push({ type: 'hint', text: 'All test cases passed! Great job.' });
+  }
+  return results;
 };
 
 export const maxNumber: ProblemElement = {
