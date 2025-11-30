@@ -6,21 +6,30 @@ const starterCodeSumArray = `function sumArray(arr){
 };`;
 
 const handlerSumArray = (fn: any) => {
-  try {
-    const tests = [
-      { arr: [1, 2, 3], expected: 6 },
-      { arr: [10, -5, 5], expected: 10 },
-      { arr: [], expected: 0 },
-    ];
-    for (const test of tests) {
+  const results: { type: 'hint' | 'error'; text: string }[] = [];
+  const tests = [
+    { arr: [1, 2, 3], expected: 6 },
+    { arr: [10, -5, 5], expected: 10 },
+    { arr: [], expected: 0 },
+  ];
+  for (const test of tests) {
+    let passed = true;
+    try {
       const result = fn(test.arr);
       assertDeepStrictEqual(result, test.expected);
+    } catch {
+      passed = false;
     }
-    return true;
-  } catch (error: any) {
-    console.log("sumArray handler function error");
-    throw new Error(error);
+    if (passed) {
+      results.push({ type: 'hint', text: `✅ Passed: sumArray([${test.arr}]) === ${test.expected}` });
+    } else {
+      results.push({ type: 'error', text: `❌ Failed: sumArray([${test.arr}]) — expected ${test.expected}` });
+    }
   }
+  if (results.every(r => r.type === 'hint')) {
+    results.push({ type: 'hint', text: 'All test cases passed! Great job.' });
+  }
+  return results;
 };
 
 export const sumArray: ProblemElement = {
