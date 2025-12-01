@@ -32,12 +32,56 @@ const PlaygroundReact: React.FC<PlaygroundReactProps> = ({ problem, setSuccess, 
     dropdownIsOpen: false,
   });
   const [runMessages, setRunMessages] = useState<{ type: "hint" | "error"; text: string }[]>([]);
+  const [runKey, setRunKey] = useState(0);
+  // Listen for messages from ReactPreview iframe
+  useEffect(() => {
+    function handleMessage(event: MessageEvent) {
+      if (event.data && event.data.source === 'react-preview' && (event.data.type === 'hint' || event.data.type === 'error')) {
+        setRunMessages(prev => [...prev, { type: event.data.type, text: event.data.text }]);
+        if (event.data.type === 'error') {
+          toast.error(event.data.text, {
+            position: 'top-center',
+            autoClose: 3000,
+            theme: 'dark',
+          });
+        }
+        // Success toast is now only shown in handleRun after confirming no errors.
+      }
+    }
+    window.addEventListener('message', handleMessage);
+    return () => window.removeEventListener('message', handleMessage);
+  }, []);
   const [activePanel, setActivePanel] = useState<"tests" | "preview" | "console">("tests");
   const [activeTestCaseId, setActiveTestCaseId] = useState<number>(0);
 
   const handleRun = async () => {
-    // Optionally, you can add code validation or linting here
-    setRunMessages([{ type: "hint", text: "Preview updated." }]);
+    // For React problems, pass the code string to the handler and show only handler messages
+    if (problem.type === 'react' && typeof problem.handlerFunction === 'function') {
+      let results: { type: 'hint' | 'error'; text: string }[] = [];
+      try {
+        results = problem.handlerFunction(userCode);
+      } catch (e) {
+        results = [{ type: 'error', text: 'Handler error: ' + (e as Error).message }];
+      }
+      setRunMessages(results);
+      if (results.some(r => r.type === 'error')) {
+        toast.error('There is an error, check the console.', {
+          position: 'top-center',
+          autoClose: 3000,
+          theme: 'dark',
+        });
+      } else {
+        toast.success('All tests passed! Try to submit.', {
+          position: 'top-center',
+          autoClose: 3000,
+          theme: 'dark',
+        });
+      }
+      return;
+    }
+    // Fallback: original preview run for non-react problems
+    setRunMessages([]);
+    setRunKey(k => k + 1);
   };
 
   const handleReset = () => {
@@ -66,6 +110,7 @@ const PlaygroundReact: React.FC<PlaygroundReactProps> = ({ problem, setSuccess, 
 
   return (
     <div className="flex flex-col bg-[#0d1117] relative overflow-x-hidden h-full">
+      <ToastProvider />
       <PreferenceNav settings={settings} setSettings={setSettings} />
       <div className="flex-1 flex flex-col min-h-0">
         <Split className="h-full" direction="vertical" sizes={[50, 50]} minSize={60}>
@@ -161,14 +206,13 @@ const PlaygroundReact: React.FC<PlaygroundReactProps> = ({ problem, setSuccess, 
             )}
             {activePanel === "preview" && (
               <div className='px-4 py-4 pb-20 h-[calc(100%-3rem)]'>
-                <ReactPreview code={userCode} />
+                <ReactPreview code={userCode} key={runKey} />
               </div>
             )}
             {activePanel === "console" && <Console messages={runMessages} />}
           </div>
         </Split>
       </div>
-      <ToastProvider />
       <EditorFooter handleRun={handleRun} handleSubmit={handleRun} handleReset={handleReset} messages={runMessages} />
     </div>
   );

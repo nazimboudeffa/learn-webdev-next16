@@ -16,26 +16,28 @@ const starterCodeCounter = `function Counter() {
 
 const handlerCounter = (Component: any) => {
   const results: { type: 'hint' | 'error'; text: string }[] = [];
-  // For now, basic validation that component is a function
-  if (typeof Component !== 'function') {
-    results.push({ type: 'error', text: 'Counter must be a function component.' });
+  const code = Component; // Now a string
+  // Check if function is declared
+  if (!/function\s+Counter\s*\(/.test(code)) {
+    results.push({ type: 'error', text: 'You must declare a function named Counter.' });
     return results;
   }
-  // Check if component returns JSX (basic validation)
-  try {
-    const result = Component({});
-    if (!result || typeof result !== 'object') {
-      results.push({ type: 'error', text: 'Component must return JSX.' });
-      return results;
-    }
-    // If passed all checks, provide a hint
+  // Check for useState usage
+  if (!/useState\s*\(/.test(code)) {
+    results.push({ type: 'error', text: 'You must use the useState hook.' });
+  }
+  // Check for count display in h1
+  if (!/<h1>\s*Count:\s*\{?\s*count\s*}?\s*<\/h1>/.test(code.replace(/\n/g, ''))) {
+    results.push({ type: 'error', text: 'You must display the count in an h1 element.' });
+  }
+  // Check for increment and decrement buttons
+  if (!/Increment/.test(code) || !/Decrement/.test(code)) {
+    results.push({ type: 'error', text: 'You must have Increment and Decrement buttons.' });
+  }
+  if (results.length === 0) {
     results.push({ type: 'hint', text: 'Looks like a valid React function component!' });
-    // Additional checks can be added here
-    return results;
-  } catch (error: any) {
-    results.push({ type: 'error', text: error.message });
-    return results;
   }
+  return results;
 };
 
 export const counter: ProblemElement = {
